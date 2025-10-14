@@ -370,13 +370,18 @@
         <div id="calculator-tab" class="tab-content">
             <div class="section">
                 <h2>My Current RPS</h2>
-                <div class="input-group">
-                    <label>Enter your Runes Per Second (RPS)</label>
-                    <input type="text" id="rateInput" placeholder="4.07" oninput="parseRate()">
-                    <div class="parsed-rate" id="parsedRate"></div>
+                <div class="calc-grid">
+                    <div class="input-group">
+                        <label>Enter your Runes Per Second (RPS)</label>
+                        <input type="text" id="rateInput" placeholder="4.07" oninput="parseRate()">
+                        <div class="parsed-rate" id="parsedRate"></div>
+                    </div>
+                    <div class="input-group">
+                        <label>Enter your Rune Clone</label>
+                        <input type="text" id="runeCloneInput" placeholder="1" oninput="parseRate()">
+                        <div class="parsed-rate" id="parsedClone"></div>
+                    </div>
                 </div>
-
-
             </div>
 
             <div class="section">
@@ -455,6 +460,7 @@
         ];
 
         let currentRPS = 0;
+        let runeClone = 1;
 
         function parseRPSInput(input) {
             // Remove spaces and convert to lowercase
@@ -607,15 +613,26 @@
             const input = document.getElementById('rateInput').value;
             const parsed = parseRPSInput(input);
             
+            const cloneInput = document.getElementById('runeCloneInput').value;
+            const parsedClone = parseRPSInput(cloneInput);
+            
             if (!isNaN(parsed) && parsed > 0) {
                 currentRPS = parsed;
                 document.getElementById('parsedRate').textContent = `Parsed Rate: ${currentRPS.toLocaleString()} RPS`;
-                renderDrops();
             } else {
                 document.getElementById('parsedRate').textContent = '';
                 currentRPS = 0;
-                renderDrops();
             }
+            
+            if (!isNaN(parsedClone) && parsedClone > 0) {
+                runeClone = parsedClone;
+                document.getElementById('parsedClone').textContent = `Parsed Clone: ${runeClone.toLocaleString()}x`;
+            } else {
+                document.getElementById('parsedClone').textContent = '';
+                runeClone = 1;
+            }
+            
+            renderDrops();
         }
 
         function formatTime(seconds) {
@@ -722,7 +739,8 @@
                 
                 let time = 'Set RPS above';
                 if (currentRPS > 0) {
-                    const seconds = drop.rate / currentRPS;
+                    const effectiveRPS = currentRPS / runeClone;
+                    const seconds = drop.rate / effectiveRPS;
                     time = formatTime(seconds);
                     
                     if (hideInstant && seconds < 1) {
