@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rune Time Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            box-shadow: 0 8px 32px rgba(138, 43, 226, 0.2);
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: #b8b8d4;
+            font-size: 1.2em;
+            font-weight: 300;
+        }
+
+        .info-banner {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 2px solid rgba(138, 43, 226, 0.4);
+            border-radius: 15px;
+            padding: 18px;
+            margin-bottom: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-banner a {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .info-banner a:hover {
+            color: #c4b5fd;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab {
+            background: transparent;
+            color: #9ca3af;
+            border: none;
+            padding: 15px 30px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .tab:hover {
+            background: rgba(138, 43, 226, 0.2);
+            color: #c4b5fd;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .section h2 {
+            color: #fff;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #c4b5fd;
+            margin-bottom: 10px;
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(138, 43, 226, 0.4);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #a78bfa;
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .parsed-rate {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.2em;
+            margin-top: 12px;
+            min-height: 30px;
+            font-weight: 700;
+        }
+
+        .custom-calculator {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 2px solid rgba(138, 43, 226, 0.3);
+        }
+
+        .custom-calculator h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #fff;
+            font-size: 1.5em;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .calc-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            border: 2px solid #a78bfa;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            font-size: 1.4em;
+            color: #c4b5fd;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(167, 139, 250, 0.2);
+        }
+
+        .drop-list {
+            margin-top: 30px;
+            display: grid;
+            gap: 15px;
+        }
+
+        .drop-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drop-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .drop-item > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .drop-item:hover {
+            border-color: rgba(167, 139, 250, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.3);
+        }
+
+        .drop-info h4 {
+            color: #fff;
+            margin-bottom: 8px;
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+
+        .drop-rate {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1em;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+
+        .bonuses-list {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .bonus-tag {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 500;
+        }
+
+        .time-estimate {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            padding: 20px 30px;
+            font-size: 1.3em;
+            color: #fff;
+            font-weight: 700;
+            min-width: 180px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
+
+        input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #a78bfa;
+        }
+
+        select {
+            padding: 12px 18px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(138, 43, 226, 0.4);
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .note {
+            color: #a78bfa;
+            font-size: 0.95em;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .calc-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .drop-item {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Rune Time Calculator</h1>
+            <p class="subtitle">Made by <span style="color: #a78bfa; font-weight: 600;">@jaaccka</span> on discord</p>
+        </header>
+
+        <div class="info-banner">
+            📝 For a full rune guide, check out the <a href="https://docs.google.com/spreadsheets/d/1M5CG_4i_TRXuWszOPdLE6w4QbjzYF-J-y_83HOPq1yk/edit?usp=sharing" target="_blank">Comprehensive Guide</a>!
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('calculator')">Rune Calculator</button>
+            <button class="tab" onclick="showTab('time-max')">Time to Max</button>
+        </div>
+
+        <div id="calculator-tab" class="tab-content">
+            <div class="section">
+                <h2>My Current RPS</h2>
+                <div class="input-group">
+                    <label>Enter your Runes Per Second (RPS)</label>
+                    <input type="text" id="rateInput" placeholder="4.07" oninput="parseRate()">
+                    <div class="parsed-rate" id="parsedRate"></div>
+                </div>
+
+
+            </div>
+
+            <div class="section">
+                <h2>Primordial Rune Times</h2>
+                <div class="controls">
+                    <input type="text" id="filterInput" placeholder="Filter runes by name..." style="flex: 1; min-width: 200px;" oninput="renderDrops()">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="hideInstant" onchange="renderDrops()">
+                        <label for="hideInstant" style="margin: 0; color: #c4b5fd;">Hide Instant</label>
+                    </div>
+                    <select id="timeUnitSelect" onchange="renderDrops()">
+                        <option value="auto">Auto Format</option>
+                        <option value="seconds">Seconds</option>
+                        <option value="minutes">Minutes</option>
+                        <option value="hours">Hours</option>
+                    </select>
+                    <select id="sortSelect" onchange="renderDrops()">
+                        <option value="recommended">Recommended</option>
+                        <option value="easiest">Easiest First</option>
+                        <option value="hardest">Hardest First</option>
+                    </select>
+                </div>
+
+                <div class="drop-list" id="dropList">
+                    <!-- Drops will be added here by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <div id="time-max-tab" class="tab-content" style="display: none;">
+            <div class="section">
+                <h2>Time to Max</h2>
+                <p style="color: #b8b8d4;">Calculate how long it will take to reach maximum level based on your current rate.</p>
+                <p style="color: #9ca3af; margin-top: 20px;">Coming soon...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const drops = [
+            { 
+                name: "Eternal", 
+                rate: 1000000, 
+                type: "Primordial", 
+                color: "linear-gradient(135deg, #4a0000, #6b0000)",
+                bonuses: ["x100 Energy", "x25 Flux", "x10 Surge", "x1 Voltage", "x2 Rarity Speed"]
+            },
+            { 
+                name: "Oblivion", 
+                rate: 2500000, 
+                type: "Primordial", 
+                color: "linear-gradient(135deg, #8b3a3a, #a05050)",
+                bonuses: ["x150 Energy", "x50 Flux", "x25 Surge", "x5 Voltage", "x2 Chips", "x1 Passive Luck"]
+            },
+            { 
+                name: "Umbralith", 
+                rate: 10000000, 
+                type: "Primordial", 
+                color: "linear-gradient(135deg, #4a2c5a, #5a3c6a)",
+                bonuses: ["Unlock a new Upgrade Tree Upgrade", "x250 Energy", "x150 Flux", "x100 Surge", "x50 Voltage", "x2 Chips", "x0.5 Watts", "x5 Wood"]
+            },
+            { 
+                name: "Aeros", 
+                rate: 25000000, 
+                type: "Primordial", 
+                color: "linear-gradient(135deg, #5a6a75, #6a7a85)",
+                bonuses: ["Unlock a new Secret Stat", "x300 Energy", "x175 Flux", "x125 Surge", "x100 Voltage", "x1 Watts", "x5 Wood", "x1 Clovers"]
+            },
+            { 
+                name: "Nuclear", 
+                rate: 20000000, 
+                type: "Primordial", 
+                color: "linear-gradient(135deg, #8b0a4a, #a01560)",
+                bonuses: ["-35 Passive Key Chance", "x500 Energy", "x250 Flux", "x200 Surge", "x100 Voltage", "x5 Chips", "x1 Watts", "x2 Passive Speed", "x2 Rune Speed"]
+            }
+        ];
+
+        let currentRPS = 0;
+
+        function parseRPSInput(input) {
+            // Remove spaces and convert to lowercase
+            input = input.toLowerCase().replace(/\s/g, '');
+            
+            // Check for k (thousand)
+            if (input.includes('k')) {
+                const num = parseFloat(input.replace('k', ''));
+                return num * 1000;
+            }
+            
+            // Check for m (million)
+            if (input.includes('m')) {
+                const num = parseFloat(input.replace('m', ''));
+                return num * 1000000;
+            }
+            
+            // Check for b (billion)
+            if (input.includes('b')) {
+                const num = parseFloat(input.replace('b', ''));
+                return num * 1000000000;
+            }
+            
+            // Just a regular number
+            return parseFloat(input);
+        }
+
+        function parseRate() {
+            const input = document.getElementById('rateInput').value;
+            const parsed = parseRPSInput(input);
+            
+            if (!isNaN(parsed) && parsed > 0) {
+                currentRPS = parsed;
+                document.getElementById('parsedRate').textContent = `Parsed Rate: ${currentRPS.toLocaleString()} RPS`;
+                renderDrops();
+            } else {
+                document.getElementById('parsedRate').textContent = '';
+                currentRPS = 0;
+                renderDrops();
+            }
+        }
+
+        function formatTime(seconds) {
+            const timeUnit = document.getElementById('timeUnitSelect').value;
+            
+            if (isNaN(seconds) || !isFinite(seconds)) return 'Infinite';
+            
+            if (timeUnit === 'seconds') {
+                return `${seconds.toFixed(2)} seconds`;
+            } else if (timeUnit === 'minutes') {
+                return `${(seconds / 60).toFixed(2)} minutes`;
+            } else if (timeUnit === 'hours') {
+                return `${(seconds / 3600).toFixed(2)} hours`;
+            }
+            
+            // Auto format
+            if (seconds < 1) return `${(seconds * 1000).toFixed(2)} ms`;
+            if (seconds < 60) return `${seconds.toFixed(2)} seconds`;
+            if (seconds < 3600) return `${(seconds / 60).toFixed(2)} minutes`;
+            if (seconds < 86400) return `${(seconds / 3600).toFixed(2)} hours`;
+            if (seconds < 604800) return `${(seconds / 86400).toFixed(2)} days`;
+            if (seconds < 2592000) return `${(seconds / 604800).toFixed(2)} weeks`;
+            if (seconds < 31536000) return `${(seconds / 2592000).toFixed(2)} months`;
+            return `${(seconds / 31536000).toFixed(2)} years`;
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'm';
+            }
+            return num.toLocaleString();
+        }
+
+        function renderDrops() {
+            const dropList = document.getElementById('dropList');
+            const filterText = document.getElementById('filterInput').value.toLowerCase();
+            const hideInstant = document.getElementById('hideInstant').checked;
+            const sortType = document.getElementById('sortSelect').value;
+            
+            let filteredDrops = drops.filter(drop => 
+                drop.name.toLowerCase().includes(filterText)
+            );
+
+            // Sort drops
+            if (sortType === 'recommended') {
+                const order = ['Eternal', 'Oblivion', 'Umbralith', 'Aeros', 'Nuclear'];
+                filteredDrops.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+            } else if (sortType === 'easiest') {
+                filteredDrops.sort((a, b) => a.rate - b.rate);
+            } else if (sortType === 'hardest') {
+                filteredDrops.sort((a, b) => b.rate - a.rate);
+            }
+
+            dropList.innerHTML = '';
+            
+            filteredDrops.forEach(drop => {
+                const dropItem = document.createElement('div');
+                dropItem.className = 'drop-item';
+                
+                let time = 'Set RPS above';
+                if (currentRPS > 0) {
+                    const seconds = drop.rate / currentRPS;
+                    time = formatTime(seconds);
+                    
+                    if (hideInstant && seconds < 1) {
+                        return;
+                    }
+                }
+                
+                const bonusesHTML = drop.bonuses.map(bonus => 
+                    `<span class="bonus-tag">${bonus}</span>`
+                ).join('');
+                
+                dropItem.innerHTML = `
+                    <div class="drop-info">
+                        <h4 style="color: #fff; font-weight: 700;">${drop.name}</h4>
+                        <div class="drop-rate">${drop.type}</div>
+                        <div class="drop-rate">1 / ${formatNumber(drop.rate)}</div>
+                        <div class="bonuses-list">${bonusesHTML}</div>
+                    </div>
+                    <div class="time-estimate">${time}</div>
+                `;
+                
+                dropItem.style.setProperty('background', drop.color);
+                dropItem.style.setProperty('border-color', 'rgba(255, 255, 255, 0.2)');
+                
+                dropList.appendChild(dropItem);
+            });
+
+            if (filteredDrops.length === 0) {
+                dropList.innerHTML = '<p style="text-align: center; color: #9ca3af; padding: 40px;">No runes found</p>';
+            }
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            document.querySelectorAll('.tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        // Initialize
+        renderDrops();
+    </script>
+</body>
+</html>
