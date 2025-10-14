@@ -509,15 +509,45 @@
                 return `${(seconds / 3600).toFixed(2)} hours`;
             }
             
-            // Auto format
-            if (seconds < 1) return `${(seconds * 1000).toFixed(2)} ms`;
-            if (seconds < 60) return `${seconds.toFixed(2)} seconds`;
-            if (seconds < 3600) return `${(seconds / 60).toFixed(2)} minutes`;
-            if (seconds < 86400) return `${(seconds / 3600).toFixed(2)} hours`;
-            if (seconds < 604800) return `${(seconds / 86400).toFixed(2)} days`;
-            if (seconds < 2592000) return `${(seconds / 604800).toFixed(2)} weeks`;
-            if (seconds < 31536000) return `${(seconds / 2592000).toFixed(2)} months`;
-            return `${(seconds / 31536000).toFixed(2)} years`;
+            // Auto format with proper units
+            if (seconds < 1) {
+                return `${(seconds * 1000).toFixed(0)} ms`;
+            }
+            if (seconds < 60) {
+                return `${seconds.toFixed(1)} seconds`;
+            }
+            if (seconds < 3600) {
+                // Show minutes and seconds
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}m ${secs}s`;
+            }
+            if (seconds < 86400) {
+                // Show hours and minutes
+                const hours = Math.floor(seconds / 3600);
+                const mins = Math.floor((seconds % 3600) / 60);
+                return `${hours}h ${mins}m`;
+            }
+            if (seconds < 604800) {
+                // Show days and hours
+                const days = Math.floor(seconds / 86400);
+                const hours = Math.floor((seconds % 86400) / 3600);
+                return `${days}d ${hours}h`;
+            }
+            if (seconds < 2592000) {
+                // Show weeks and days
+                const weeks = Math.floor(seconds / 604800);
+                const days = Math.floor((seconds % 604800) / 86400);
+                return `${weeks}w ${days}d`;
+            }
+            if (seconds < 31536000) {
+                // Show months
+                const months = (seconds / 2592000).toFixed(1);
+                return `${months} months`;
+            }
+            // Show years
+            const years = (seconds / 31536000).toFixed(1);
+            return `${years} years`;
         }
 
         function formatNumber(num) {
