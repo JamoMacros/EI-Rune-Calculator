@@ -300,6 +300,44 @@
             box-shadow: 0 8px 25px rgba(138, 43, 226, 0.3);
         }
 
+        .rune-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid rgba(167, 139, 250, 0.6);
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 250px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .drop-item:hover .rune-tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-20px);
+        }
+
+        .rune-tooltip img {
+            width: 100%;
+            height: 150px;
+            object-fit: contain;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .rune-location {
+            color: #a78bfa;
+            font-weight: 600;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
         .drop-info h4 {
             color: #fff;
             margin-bottom: 8px;
@@ -469,35 +507,45 @@
                 rate: 1000000, 
                 type: "Primordial", 
                 color: "linear-gradient(135deg, #4a0000, #6b0000)",
-                bonuses: ["x100 Energy", "x25 Flux", "x10 Surge", "x1 Voltage", "x2 Rarity Speed"]
+                bonuses: ["x100 Energy", "x25 Flux", "x10 Surge", "x1 Voltage", "x2 Rarity Speed"],
+                location: "Starter Rune",
+                image: "images/eternal.png"
             },
             { 
                 name: "Oblivion", 
                 rate: 2500000, 
                 type: "Primordial", 
                 color: "linear-gradient(135deg, #8b3a3a, #a05050)",
-                bonuses: ["x150 Energy", "x50 Flux", "x25 Surge", "x5 Voltage", "x2 Chips", "x1 Passive Luck"]
+                bonuses: ["x150 Energy", "x50 Flux", "x25 Surge", "x5 Voltage", "x2 Chips", "x1 Passive Luck"],
+                location: "Quantum Rune",
+                image: "images/oblivion.png"
             },
             { 
                 name: "Umbralith", 
                 rate: 10000000, 
                 type: "Primordial", 
                 color: "linear-gradient(135deg, #4a2c5a, #5a3c6a)",
-                bonuses: ["Unlock a new Upgrade Tree Upgrade", "x250 Energy", "x150 Flux", "x100 Surge", "x50 Voltage", "x2 Chips", "x0.5 Watts", "x5 Wood"]
+                bonuses: ["Unlock a new Upgrade Tree Upgrade", "x250 Energy", "x150 Flux", "x100 Surge", "x50 Voltage", "x2 Chips", "x0.5 Watts", "x5 Wood"],
+                location: "Power Rune",
+                image: "images/umbralith.png"
             },
             { 
                 name: "Aeros", 
                 rate: 25000000, 
                 type: "Primordial", 
                 color: "linear-gradient(135deg, #5a6a75, #6a7a85)",
-                bonuses: ["Unlock a new Secret Stat", "x300 Energy", "x175 Flux", "x125 Surge", "x100 Voltage", "x1 Watts", "x5 Wood", "x1 Clovers"]
+                bonuses: ["Unlock a new Secret Stat", "x300 Energy", "x175 Flux", "x125 Surge", "x100 Voltage", "x1 Watts", "x5 Wood", "x1 Clovers"],
+                location: "Starter Rune",
+                image: "images/aeros.png"
             },
             { 
                 name: "Nuclear", 
                 rate: 20000000, 
                 type: "Primordial", 
                 color: "linear-gradient(135deg, #8b0a4a, #a01560)",
-                bonuses: ["-35 Passive Key Chance", "x500 Energy", "x250 Flux", "x200 Surge", "x100 Voltage", "x5 Chips", "x1 Watts", "x2 Passive Speed", "x2 Rune Speed"]
+                bonuses: ["-35 Passive Key Chance", "x500 Energy", "x250 Flux", "x200 Surge", "x100 Voltage", "x5 Chips", "x1 Watts", "x2 Passive Speed", "x2 Rune Speed"],
+                location: "Energy Rune",
+                image: "images/nuclear.png"
             }
         ];
 
@@ -782,6 +830,10 @@
                 ).join('');
                 
                 dropItem.innerHTML = `
+                    <div class="rune-tooltip">
+                        <img src="${drop.image}" alt="${drop.name}" onerror="this.style.display='none'">
+                        <div class="rune-location">Found in: ${drop.location}</div>
+                    </div>
                     <div class="drop-info">
                         <h4 style="color: #fff; font-weight: 700;">${drop.name}</h4>
                         <div class="drop-rate">${drop.type}</div>
