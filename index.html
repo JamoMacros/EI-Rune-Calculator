@@ -706,7 +706,7 @@
 
             // Sort drops
             if (sortType === 'recommended') {
-                const order = ['Eternal', 'Oblivion', 'Umbralith', 'Aeros', 'Nuclear'];
+                const order = ['Eternal', 'Oblivion', 'Umbralith', 'Nuclear', 'Aeros'];
                 filteredDrops.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
             } else if (sortType === 'easiest') {
                 filteredDrops.sort((a, b) => a.rate - b.rate);
