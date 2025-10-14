@@ -501,6 +501,16 @@
             
             if (isNaN(seconds) || !isFinite(seconds)) return 'Infinite';
             
+            // Check if over 10 years (315,360,000 seconds)
+            if (timeUnit === 'auto' && seconds > 315360000) {
+                const funnyMessages = [
+                    "LOL don't even bother",
+                    "In a gazillion years",
+                    "Someday..."
+                ];
+                return funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+            }
+            
             if (timeUnit === 'seconds') {
                 return `${seconds.toFixed(2)} seconds`;
             } else if (timeUnit === 'minutes') {
