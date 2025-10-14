@@ -501,6 +501,11 @@
             
             if (isNaN(seconds) || !isFinite(seconds)) return 'Infinite';
             
+            // Check if under 0.5 seconds in auto format
+            if (timeUnit === 'auto' && seconds < 0.5) {
+                return 'Instant';
+            }
+            
             // Check if over 10 years (315,360,000 seconds)
             if (timeUnit === 'auto' && seconds > 315360000) {
                 const funnyMessages = [
